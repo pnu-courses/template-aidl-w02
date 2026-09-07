@@ -1,14 +1,15 @@
 # ============================================================
-# 2주차 제출 01 — MNIST 내려받기
+# 2주차 · 1단계 (과정)  — MNIST 내려받기
 #
-# 실행하면 MNIST 를 data/ 폴더에 내려받고 통계를 출력합니다.
+# 이 파일은 채점되지 않습니다. 최종 제출물인 submission03.py 를
+# 만들기 위한 준비 단계이며, 여기서 만든 load_mnist 를
+# submission02.py 와 submission03.py 가 그대로 가져다 씁니다.
+#
 #   $ python3 submission01.py
 #   60000
 #   10000
 #   1 28 28
 #   5 0 4 1 9
-#
-# 여기서 만든 load_mnist 는 submission02.py, submission03.py 도 함께 씁니다.
 # ============================================================
 from torchvision import datasets, transforms
 

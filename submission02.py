@@ -1,10 +1,12 @@
 # ============================================================
-# 2주차 제출 02 — 학습
+# 2주차 · 2단계 (과정)  — 학습해서 model.pt 만들기
 #
-# 실행하면 MNIST 로 모델을 학습시키고 model.pt 를 만듭니다.
+# 이 파일도 채점되지 않습니다. 다만 여기서 만든 model.pt 가 없으면
+# 최종 제출물인 submission03.py 가 동작하지 않습니다.
+#
 #   $ python3 submission02.py
-#
-# 마지막 줄에 정확도가 90% 이상이면 PASS, 아니면 FAIL 을 출력합니다.
+#   ACC 0.9xxx
+#   PASS
 # ============================================================
 import torch
 import torch.nn as nn
@@ -23,11 +25,11 @@ THRESHOLD = 0.90
 def train_one_epoch(model, loader, criterion, optimizer):
     """한 epoch 학습한다. 다섯 단계를 순서대로 채우세요.
 
-      ① loader 에서 (x, y) 를 꺼낸다
-      ② pred = model(x)
-      ③ loss = criterion(pred, y)
-      ④ optimizer.zero_grad() 후 loss.backward()
-      ⑤ optimizer.step()
+      1) loader 에서 (x, y) 를 꺼낸다
+      2) pred = model(x)
+      3) loss = criterion(pred, y)
+      4) optimizer.zero_grad() 후 loss.backward()
+      5) optimizer.step()
 
     zero_grad() 를 빠뜨리면 기울기가 누적되어 학습이 망가집니다.
     """
@@ -62,6 +64,7 @@ def main():
     torch.save(model.state_dict(), "model.pt")
     print(f"ACC {acc:.4f}")
     print("PASS" if acc >= THRESHOLD else "FAIL")
+    print("saved model.pt")
 
 
 if __name__ == "__main__":
