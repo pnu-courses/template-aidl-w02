@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# 주차별 추가
+data/
+*.pt
+!model.pt
