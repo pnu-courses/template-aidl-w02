@@ -1,50 +1,85 @@
 # ============================================================
-# 2주차 · 2단계 점검  — model.pt 가 쓸 만한지 확인
+# 2주차 · 2단계  — 개인 PC에서 학습해 model.pt 만들기
 #
-# 이 파일은 고치지 않아도 됩니다. submission02.py 로 학습을 끝낸 뒤
-# 그냥 실행만 하세요.
+# 학습은 자원을 많이 쓰므로 채점기에서 돌리지 않습니다.
+# 여기서 만든 model.pt 를 저장소에 커밋해 제출하면,
+# 채점기는 submission02.py 로 평가만 수행합니다.
+#
 #   $ python3 guideline02.py
-#
-# 학생 코드의 정확도 계산을 믿지 않고, 여기서 직접 다시 잽니다.
+#   epoch 1  loss 0.xxxx
+#   test accuracy 0.9xxx
+#   saved model.pt
 # ============================================================
-import os
-
 import torch
+import torch.nn as nn
 from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
 
 from model import MnistNet
-from submission01 import load_mnist
 
-THRESHOLD = 0.90
+DATA_ROOT = "data"
+SEED = 0
+EPOCHS = 1
+BATCH = 128
+LR = 1e-3
+
+
+def loaders():
+    """학습용·평가용 DataLoader 를 만든다."""
+    tf = transforms.ToTensor()
+    train = datasets.MNIST(DATA_ROOT, train=True, download=True, transform=tf)
+    test = datasets.MNIST(DATA_ROOT, train=False, download=True, transform=tf)
+    return (DataLoader(train, batch_size=BATCH, shuffle=True),
+            DataLoader(test, batch_size=512))
+
+
+def train_one_epoch(model, loader, criterion, optimizer):
+    """한 epoch 학습하고 평균 손실을 반환한다.
+
+    다섯 단계를 순서대로 채우세요.
+      1) loader 에서 (x, y) 를 꺼낸다
+      2) pred = model(x)
+      3) loss = criterion(pred, y)
+      4) optimizer.zero_grad() 후 loss.backward()
+      5) optimizer.step()
+
+    zero_grad() 를 빠뜨리면 기울기가 누적되어 학습이 망가집니다.
+    """
+    model.train()
+    # TODO: 위 다섯 단계로 학습 루프를 작성하고 평균 손실을 반환하세요.
+    raise NotImplementedError
 
 
 def accuracy(model, loader):
-    """테스트셋 정확도를 직접 계산한다."""
+    """테스트셋 정확도를 0~1 사이 실수로 반환한다."""
     model.eval()
     correct = total = 0
     with torch.no_grad():
         for x, y in loader:
-            pred = model(x).argmax(dim=1)
-            correct += int((pred == y).sum())
+            correct += int((model(x).argmax(dim=1) == y).sum())
             total += int(y.numel())
     return correct / total
 
 
 def main():
-    if not os.path.exists("model.pt"):
-        print("model.pt 가 없습니다. 먼저 python3 submission02.py 를 실행하세요.")
-        return
+    torch.manual_seed(SEED)
+    train_loader, test_loader = loaders()
 
     model = MnistNet()
-    model.load_state_dict(torch.load("model.pt"))
-    loader = DataLoader(load_mnist(False), batch_size=512)
+    criterion = nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=LR)
 
-    acc = accuracy(model, loader)
-    print(f"테스트 정확도: {acc:.4f}   기준 {THRESHOLD:.2f}")
-    if acc >= THRESHOLD:
-        print("==> 2단계 통과")
-    else:
-        print("==> 2단계 실패 — 학습 루프를 다시 확인하세요")
+    for epoch in range(1, EPOCHS + 1):
+        loss = train_one_epoch(model, train_loader, criterion, optimizer)
+        print(f"epoch {epoch}  loss {loss:.4f}")
+
+    acc = accuracy(model, test_loader)
+    print(f"test accuracy {acc:.4f}")
+    if acc < 0.90:
+        print("경고: 정확도가 90% 미만입니다. 학습 루프를 다시 확인하세요.")
+
+    torch.save(model.state_dict(), "model.pt")
+    print("saved model.pt")
 
 
 if __name__ == "__main__":

@@ -1,53 +1,66 @@
 # ============================================================
-# 2주차 · 2단계 제출 파일  — 학습해서 model.pt 만들기
+# 2주차 · 최종 제출물  — 올린 결과물로 평가하기
 #
-# 실행하면 MNIST 로 모델을 학습시키고 model.pt 를 저장합니다.
-#   $ python3 submission02.py
+# ★ 채점기가 실행하는 파일은 이것 하나입니다. ★
 #
-# 완성한 뒤 점검:  $ python3 guideline02.py
+# 학습도, 다운로드도 하지 않습니다.
+# 여러분이 저장소에 올린 두 파일만 사용합니다.
+#   · samples.npz  (1단계 산출물, 약 3KB)
+#   · model.pt     (2단계 산출물)
+#
+#   $ echo "0 1 2" | python3 submission02.py
+#   7 2 1
 # ============================================================
+import sys
+
+import numpy as np
 import torch
-import torch.nn as nn
-from torch.utils.data import DataLoader
 
 from model import MnistNet
-from submission01 import load_mnist
-
-SEED = 0
-EPOCHS = 1
-BATCH = 128
-LR = 1e-3
 
 
-def train_one_epoch(model, loader, criterion, optimizer):
-    """한 epoch 학습한다. 다섯 단계를 순서대로 채우세요.
+def load_samples(path="samples.npz"):
+    """올려 둔 표본을 모델이 받을 수 있는 텐서로 만든다.
 
-      1) loader 에서 (x, y) 를 꺼낸다
-      2) pred = model(x)
-      3) loss = criterion(pred, y)
-      4) optimizer.zero_grad() 후 loss.backward()
-      5) optimizer.step()
-
-    zero_grad() 를 빠뜨리면 기울기가 누적되어 학습이 망가집니다.
+    저장된 images 는 (N, 28, 28) 모양의 0~255 정수입니다.
+    다음 순서로 변환하세요.
+      1) 255.0 으로 나눠 0~1 범위로 만든다
+      2) float32 텐서로 바꾼다
+      3) 채널 차원을 넣어 (N, 1, 28, 28) 로 만든다
     """
-    model.train()
-    # TODO: 위 다섯 단계로 학습 루프를 작성하세요.
+    # TODO: np.load(path)["images"] 를 위 설명대로 변환해 반환하세요.
+    raise NotImplementedError
+
+
+def load_model(path="model.pt"):
+    """저장된 가중치를 불러와 추론 준비가 된 모델을 반환한다.
+
+    순서:
+      1) MnistNet() 으로 빈 모델을 만든다
+      2) torch.load(path) 로 state_dict 를 읽어 load_state_dict 로 넣는다
+      3) model.eval() 을 호출해 추론 모드로 바꾼다
+
+    eval() 을 빠뜨리면 Dropout·BatchNorm 이 학습 모드로 남아 결과가 달라집니다.
+    """
+    # TODO: 위 세 단계를 구현하세요.
+    raise NotImplementedError
+
+
+def predict(model, images, indices):
+    """주어진 인덱스들의 예측 숫자를 리스트로 반환한다.
+
+    images 는 (N, 1, 28, 28) 텐서입니다.
+    예측은 출력이 가장 큰 인덱스이며, torch.no_grad() 안에서 계산하세요.
+    """
+    # TODO: 각 인덱스마다 예측한 숫자를 모아 반환하세요.
     raise NotImplementedError
 
 
 def main():
-    torch.manual_seed(SEED)
-    loader = DataLoader(load_mnist(True), batch_size=BATCH, shuffle=True)
-
-    model = MnistNet()
-    criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=LR)
-
-    for _ in range(EPOCHS):
-        train_one_epoch(model, loader, criterion, optimizer)
-
-    torch.save(model.state_dict(), "model.pt")
-    print("saved model.pt")
+    indices = [int(v) for v in sys.stdin.read().split()]
+    images = load_samples()
+    model = load_model()
+    print(" ".join(str(v) for v in predict(model, images, indices)))
 
 
 if __name__ == "__main__":
