@@ -1,70 +1,50 @@
 # ============================================================
-# 2주차 · 2단계 가이드 — 학습해서 model.pt 만들기
+# 2주차 · 2단계 점검  — model.pt 가 쓸 만한지 확인
 #
-# 이 파일도 채점되지 않습니다. 다만 여기서 만든 model.pt 가 없으면
-# 최종 제출물인 submission03.py 가 동작하지 않습니다.
-#
+# 이 파일은 고치지 않아도 됩니다. submission02.py 로 학습을 끝낸 뒤
+# 그냥 실행만 하세요.
 #   $ python3 guideline02.py
-#   ACC 0.9xxx
-#   PASS
+#
+# 학생 코드의 정확도 계산을 믿지 않고, 여기서 직접 다시 잽니다.
 # ============================================================
+import os
+
 import torch
-import torch.nn as nn
 from torch.utils.data import DataLoader
 
 from model import MnistNet
-from guideline01 import load_mnist
+from submission01 import load_mnist
 
-SEED = 0
-EPOCHS = 1
-BATCH = 128
-LR = 1e-3
 THRESHOLD = 0.90
 
 
-def train_one_epoch(model, loader, criterion, optimizer):
-    """한 epoch 학습한다. 다섯 단계를 순서대로 채우세요.
-
-      1) loader 에서 (x, y) 를 꺼낸다
-      2) pred = model(x)
-      3) loss = criterion(pred, y)
-      4) optimizer.zero_grad() 후 loss.backward()
-      5) optimizer.step()
-
-    zero_grad() 를 빠뜨리면 기울기가 누적되어 학습이 망가집니다.
-    """
-    model.train()
-    # TODO: 위 다섯 단계로 학습 루프를 작성하세요.
-    raise NotImplementedError
-
-
-def evaluate(model, loader):
-    """테스트셋 정확도를 0~1 사이 실수로 반환한다.
-
-    torch.no_grad() 안에서 계산하고, 예측은 출력이 가장 큰 인덱스입니다.
-    """
+def accuracy(model, loader):
+    """테스트셋 정확도를 직접 계산한다."""
     model.eval()
-    # TODO: 맞힌 개수 / 전체 개수 를 반환하세요.
-    raise NotImplementedError
+    correct = total = 0
+    with torch.no_grad():
+        for x, y in loader:
+            pred = model(x).argmax(dim=1)
+            correct += int((pred == y).sum())
+            total += int(y.numel())
+    return correct / total
 
 
 def main():
-    torch.manual_seed(SEED)
-    train_loader = DataLoader(load_mnist(True), batch_size=BATCH, shuffle=True)
-    test_loader = DataLoader(load_mnist(False), batch_size=512)
+    if not os.path.exists("model.pt"):
+        print("model.pt 가 없습니다. 먼저 python3 submission02.py 를 실행하세요.")
+        return
 
     model = MnistNet()
-    criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=LR)
+    model.load_state_dict(torch.load("model.pt"))
+    loader = DataLoader(load_mnist(False), batch_size=512)
 
-    for _ in range(EPOCHS):
-        train_one_epoch(model, train_loader, criterion, optimizer)
-
-    acc = evaluate(model, test_loader)
-    torch.save(model.state_dict(), "model.pt")
-    print(f"ACC {acc:.4f}")
-    print("PASS" if acc >= THRESHOLD else "FAIL")
-    print("saved model.pt")
+    acc = accuracy(model, loader)
+    print(f"테스트 정확도: {acc:.4f}   기준 {THRESHOLD:.2f}")
+    if acc >= THRESHOLD:
+        print("==> 2단계 통과")
+    else:
+        print("==> 2단계 실패 — 학습 루프를 다시 확인하세요")
 
 
 if __name__ == "__main__":

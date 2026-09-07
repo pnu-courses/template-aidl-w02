@@ -1,46 +1,42 @@
 # ============================================================
-# 2주차 · 1단계 가이드 — MNIST 내려받기
+# 2주차 · 1단계 점검  — submission01.py 가 맞게 됐는지 확인
 #
-# 이 파일은 채점되지 않습니다. 최종 제출물인 submission03.py 를
-# 만들기 위한 준비 단계이며, 여기서 만든 load_mnist 를
-# guideline02.py 와 submission03.py 가 그대로 가져다 씁니다.
-#
+# 이 파일은 고치지 않아도 됩니다. 그냥 실행만 하세요.
 #   $ python3 guideline01.py
-#   60000
-#   10000
-#   1 28 28
-#   5 0 4 1 9
+#
+# 통과하면 아래처럼 나옵니다.
+#   학습 표본 수 : 60000   기대 60000   OK
+#   검증 표본 수 : 10000   기대 10000   OK
+#   이미지 모양  : 1 28 28  기대 1 28 28  OK
+#   앞 5개 레이블: 5 0 4 1 9  기대 5 0 4 1 9  OK
+#   ==> 1단계 통과
 # ============================================================
-from torchvision import datasets, transforms
+from submission01 import load_mnist
 
-DATA_ROOT = "data"
+EXPECT_TRAIN = 60000
+EXPECT_TEST = 10000
+EXPECT_SHAPE = (1, 28, 28)
+EXPECT_LABELS = [5, 0, 4, 1, 9]
 
 
-def load_mnist(train):
-    """MNIST 데이터셋을 내려받아 Dataset 객체를 반환한다.
-
-    datasets.MNIST 에 다음을 넘기세요.
-      root=DATA_ROOT, train=train, download=True,
-      transform=transforms.ToTensor()
-
-    ToTensor() 는 0~255 정수 이미지를 0~1 실수 텐서 (1, 28, 28) 로 바꿉니다.
-    download=True 이면 data/ 폴더에 없을 때만 내려받습니다.
-    """
-    # TODO: 위 설명대로 datasets.MNIST 를 만들어 반환하세요.
-    raise NotImplementedError
+def check(name, got, want):
+    ok = got == want
+    print(f"{name:<12}: {got}   기대 {want}   {'OK' if ok else '불일치'}")
+    return ok
 
 
 def main():
     train_set = load_mnist(True)
     test_set = load_mnist(False)
-
-    print(len(train_set))
-    print(len(test_set))
-
     image, _ = train_set[0]
-    print(image.shape[0], image.shape[1], image.shape[2])
 
-    print(" ".join(str(int(train_set[i][1])) for i in range(5)))
+    results = [
+        check("학습 표본 수", len(train_set), EXPECT_TRAIN),
+        check("검증 표본 수", len(test_set), EXPECT_TEST),
+        check("이미지 모양", tuple(image.shape), EXPECT_SHAPE),
+        check("앞 5개 레이블", [int(train_set[i][1]) for i in range(5)], EXPECT_LABELS),
+    ]
+    print("==> 1단계 통과" if all(results) else "==> 1단계 실패 — submission01.py 를 다시 확인하세요")
 
 
 if __name__ == "__main__":
