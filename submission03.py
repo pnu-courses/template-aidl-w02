@@ -3,22 +3,37 @@
 #
 # ★ 채점기가 실행하는 파일은 이것 하나입니다. ★
 #
-# 표준입력으로 MNIST 테스트셋 인덱스들을 받아, 각 이미지의 예측 숫자를
-# 공백으로 구분해 한 줄로 출력합니다.
+# 이 파일은 학습을 하지 않고, 데이터셋을 내려받지도 않습니다.
+# 저장소에 함께 들어 있는 samples.npz(약 3KB)와
+# 여러분이 만든 model.pt 만 사용합니다.
+#
+# 무거운 작업(데이터 준비, 학습)은 개인 PC에서 1~2단계로 끝내 두세요.
 #
 #   $ echo "0 1 2" | python3 submission03.py
 #   7 2 1
 #
 # 실행 조건
-#   · submission01.py 의 load_mnist 가 완성되어 있어야 합니다.
-#   · submission02.py 를 먼저 실행해 model.pt 를 만들어 두어야 합니다.
+#   · submission02.py 로 만든 model.pt 가 저장소에 있어야 합니다.
 # ============================================================
 import sys
 
+import numpy as np
 import torch
 
 from model import MnistNet
-from submission01 import load_mnist
+
+
+def load_samples(path="samples.npz"):
+    """채점용 MNIST 표본을 불러와 모델이 받을 수 있는 텐서로 만든다.
+
+    저장된 images 는 (N, 28, 28) 모양의 0~255 정수입니다.
+    다음 순서로 변환하세요.
+      1) 255.0 으로 나눠 0~1 범위로 만든다
+      2) float32 텐서로 바꾼다
+      3) 채널 차원을 넣어 (N, 1, 28, 28) 로 만든다
+    """
+    # TODO: np.load(path)["images"] 를 위 설명대로 변환해 반환하세요.
+    raise NotImplementedError
 
 
 def load_model(path="model.pt"):
@@ -35,12 +50,11 @@ def load_model(path="model.pt"):
     raise NotImplementedError
 
 
-def predict(model, dataset, indices):
+def predict(model, images, indices):
     """주어진 인덱스들의 예측 숫자를 리스트로 반환한다.
 
-    dataset[i] 는 (이미지 텐서, 정답 레이블) 을 돌려줍니다.
-    이미지 하나를 넣을 때는 unsqueeze(0) 으로 배치 차원을 붙이세요.
-    예측은 출력이 가장 큰 인덱스이며, torch.no_grad() 안에서 계산하면 더 빠릅니다.
+    images 는 (N, 1, 28, 28) 텐서입니다.
+    예측은 출력이 가장 큰 인덱스이며, torch.no_grad() 안에서 계산하세요.
     """
     # TODO: 각 인덱스마다 예측한 숫자를 모아 반환하세요.
     raise NotImplementedError
@@ -48,9 +62,9 @@ def predict(model, dataset, indices):
 
 def main():
     indices = [int(v) for v in sys.stdin.read().split()]
+    images = load_samples()
     model = load_model()
-    test_set = load_mnist(False)
-    print(" ".join(str(v) for v in predict(model, test_set, indices)))
+    print(" ".join(str(v) for v in predict(model, images, indices)))
 
 
 if __name__ == "__main__":
