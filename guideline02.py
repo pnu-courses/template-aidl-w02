@@ -1,10 +1,10 @@
 # ============================================================
-# 2주차 · 2단계 (과정)  — 학습해서 model.pt 만들기
+# 2주차 · 2단계 가이드 — 학습해서 model.pt 만들기
 #
 # 이 파일도 채점되지 않습니다. 다만 여기서 만든 model.pt 가 없으면
 # 최종 제출물인 submission03.py 가 동작하지 않습니다.
 #
-#   $ python3 submission02.py
+#   $ python3 guideline02.py
 #   ACC 0.9xxx
 #   PASS
 # ============================================================
@@ -13,7 +13,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 
 from model import MnistNet
-from submission01 import load_mnist
+from guideline01 import load_mnist
 
 SEED = 0
 EPOCHS = 1

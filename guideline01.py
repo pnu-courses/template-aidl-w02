@@ -1,11 +1,11 @@
 # ============================================================
-# 2주차 · 1단계 (과정)  — MNIST 내려받기
+# 2주차 · 1단계 가이드 — MNIST 내려받기
 #
 # 이 파일은 채점되지 않습니다. 최종 제출물인 submission03.py 를
 # 만들기 위한 준비 단계이며, 여기서 만든 load_mnist 를
-# submission02.py 와 submission03.py 가 그대로 가져다 씁니다.
+# guideline02.py 와 submission03.py 가 그대로 가져다 씁니다.
 #
-#   $ python3 submission01.py
+#   $ python3 guideline01.py
 #   60000
 #   10000
 #   1 28 28

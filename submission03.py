@@ -10,15 +10,15 @@
 #   7 2 1
 #
 # 실행 조건
-#   · submission01.py 의 load_mnist 가 완성되어 있어야 합니다.
-#   · submission02.py 를 먼저 실행해 model.pt 를 만들어 두어야 합니다.
+#   · guideline01.py 의 load_mnist 가 완성되어 있어야 합니다.
+#   · guideline02.py 를 먼저 실행해 model.pt 를 만들어 두어야 합니다.
 # ============================================================
 import sys
 
 import torch
 
 from model import MnistNet
-from submission01 import load_mnist
+from guideline01 import load_mnist
 
 
 def load_model(path="model.pt"):
