@@ -19,7 +19,7 @@ from model import MnistNet
 
 DATA_ROOT = "data"
 SEED = 0
-EPOCHS = 1
+EPOCHS = 100
 BATCH = 128
 LR = 1e-3
 
@@ -45,21 +45,13 @@ def train_one_epoch(model, loader, criterion, optimizer):
 
     zero_grad() 를 빠뜨리면 기울기가 누적되어 학습이 망가집니다.
     """
-    model.train()
     # TODO: 위 다섯 단계로 학습 루프를 작성하고 평균 손실을 반환하세요.
     raise NotImplementedError
 
 
 def accuracy(model, loader):
     """테스트셋 정확도를 0~1 사이 실수로 반환한다."""
-    model.eval()
-    correct = total = 0
-    with torch.no_grad():
-        for x, y in loader:
-            correct += int((model(x).argmax(dim=1) == y).sum())
-            total += int(y.numel())
-    return correct / total
-
+    raise NotImplementedError
 
 def main():
     torch.manual_seed(SEED)
@@ -72,11 +64,10 @@ def main():
     for epoch in range(1, EPOCHS + 1):
         loss = train_one_epoch(model, train_loader, criterion, optimizer)
         print(f"epoch {epoch}  loss {loss:.4f}")
-
-    acc = accuracy(model, test_loader)
-    print(f"test accuracy {acc:.4f}")
-    if acc < 0.90:
-        print("경고: 정확도가 90% 미만입니다. 학습 루프를 다시 확인하세요.")
+        acc = accuracy(model, test_loader)
+        print(f"test accuracy {acc:.4f}")
+        
+    print(f"final test accuracy {acc:.4f}")
 
     torch.save(model.state_dict(), "model.pt")
     print("saved model.pt")

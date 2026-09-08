@@ -1,22 +1,11 @@
 [project]
 name = "template-aidl-w02"
 version = "0.1.0"
-description = "인공지능융합설계및실험 2026-2 · 2주차 과제 템플릿"
+description = "Add your description here"
+readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "numpy>=2.5.3",
     "torch>=2.14.0",
     "torchvision>=0.29.0",
 ]
-
-# 채점기는 CPU 컨테이너에서 돌아갑니다. torch 를 기본 PyPI 에서 받으면
-# nvidia-* CUDA 휠까지 딸려와 매 채점마다 수 GB 를 내려받게 되므로,
-# CPU 전용 인덱스를 explicit 으로 두고 torch 계열만 그쪽에서 받습니다.
-[tool.uv.sources]
-torch = { index = "pytorch-cpu" }
-torchvision = { index = "pytorch-cpu" }
-
-[[tool.uv.index]]
-name = "pytorch-cpu"
-url = "https://download.pytorch.org/whl/cpu"
-explicit = true

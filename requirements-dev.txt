@@ -1,3 +1,0 @@
-# 개인 PC에서 표본 추출과 학습을 할 때 추가로 필요
--r requirements.txt
-torchvision>=0.17

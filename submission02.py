@@ -47,10 +47,7 @@ def load_model(path="model.pt"):
     eval() 을 빠뜨리면 Dropout·BatchNorm 이 학습 모드로 남아 결과가 달라집니다.
     """
     # TODO: 위 세 단계를 구현하세요.
-    model = MnistNet()
-    model.load_state_dict(torch.load(path))
-    model.eval()
-    return model
+    return ...
 
 
 def predict(model, images, indices):
@@ -60,11 +57,7 @@ def predict(model, images, indices):
     예측은 출력이 가장 큰 인덱스이며, torch.no_grad() 안에서 계산하세요.
     """
     # TODO: 각 인덱스마다 예측한 숫자를 모아 반환하세요.
-    with torch.no_grad():
-        outputs = model(images)
-        _, predicted = torch.max(outputs, 1)
-        return [predicted[i].item() for i in indices]
-    
+    return ...    
 
 
 def main():
