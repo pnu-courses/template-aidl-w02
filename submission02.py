@@ -28,7 +28,6 @@ def load_samples(path="samples.npz"):
       2) float32 텐서로 바꾼다
       3) 채널 차원을 넣어 (N, 1, 28, 28) 로 만든다
     """
-    # TODO: np.load(path)["images"] 를 위 설명대로 변환해 반환하세요.
     with np.load(path) as data:
         images = data["images"].astype(np.float32) / 255.0
     
