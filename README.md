@@ -1,4 +1,4 @@
-# 2주차 과제 — MNIST 표본 만들기와 학습된 모델 평가하기
+# 2주차 과제 — 학습된 모델 평가 및 제출 방법 설명 가이드라인
 
 > **Ch 1. 개발 환경 구축** · 배점 20점 · 마감 2026-09-14 23:59
 
@@ -13,7 +13,7 @@
 - nn.Module 을 상속해 모델을 정의하는 방법 (__init__ 과 forward)
 - 학습 루프의 다섯 단계: 데이터 → forward → loss → backward → step
 - state_dict 만 저장하는 이유와 model.eval() 의 역할
-- Git LFS 로 큰 가중치 파일을 제출하는 방법
+- uv 로 잠긴 의존성을 재현해 채점기와 같은 환경을 만드는 방법
 
 ## 저장소 구성
 
@@ -25,8 +25,10 @@
 | `submission02.py` | **최종 제출물** — 올린 `samples.npz` 와 `model.pt` 로 평가만 수행 (채점 대상) |
 | `model.py` | 학습과 평가가 함께 쓰는 모델 클래스 정의 |
 | `samples.npz` | 1단계 산출물 — 저장소에 커밋해 제출 |
-| `model.pt` | 2단계 산출물 — Git LFS 로 커밋해 제출 |
-| `.gitattributes` | `*.pt` 를 LFS 로 추적하도록 설정 (이미 포함됨) |
+| `model.pt` | 2단계 산출물 — 저장소에 커밋해 제출 |
+| `pyproject.toml` | 의존성 정의 — `uv sync` 가 이 파일을 읽는다 |
+| `uv.lock` | 잠긴 의존성 버전 — 채점기와 같은 환경을 재현한다 (수정하지 마세요) |
+| `.python-version` | 이 과제가 쓰는 파이썬 버전 (3.12) |
 
 ## 구현할 내용
 
@@ -71,14 +73,15 @@ submission02.py — 예측한 숫자들을 공백으로 구분해 한 줄
 ## 제출 방법
 
 1. 위 파일들의 `TODO` 를 모두 채웁니다.
-2. 개인 PC에서 `pip install -r requirements-dev.txt` 로 작업 환경을 준비합니다.
-3. `python3 submission01.py` 를 실행해 `samples.npz` 를 만들고, `python3 guideline01.py` 로 점검합니다.
-4. `python3 guideline02.py` 를 실행해 학습하고 `model.pt` 를 만듭니다.
-5. `echo "0 1 2" | python3 submission02.py` 로 `7 2 1` 이 나오는지 확인합니다. **채점되는 것은 이 파일입니다.**
-6. `git lfs install` 후 `git lfs track "*.pt"` 로 가중치를 추적합니다. (`.gitattributes` 는 이미 포함됨)
-7. `git add . && git commit -m "solve" && git push` — **push 가 곧 제출입니다.**
-8. 저장소의 **Actions** 탭에서 자동 채점 결과를 확인합니다.
-9. 마감 전까지 몇 번이든 다시 제출할 수 있으며, 마지막 제출이 평가됩니다.
+2. 개인 PC에 [uv](https://docs.astral.sh/uv/) 를 설치한 뒤 `uv sync` 로 작업 환경을 준비합니다. `uv.lock` 에 잠긴 그대로 설치되므로 채점기와 같은 환경이 됩니다.
+3. `uv run submission01.py` 를 실행해 `samples.npz` 를 만들고, `uv run guideline01.py` 로 점검합니다.
+4. `uv run guideline02.py` 를 실행해 학습하고 `model.pt` 를 만듭니다.
+5. `echo "0 1 2" | uv run submission02.py` 로 `7 2 1` 이 나오는지 확인합니다. **채점되는 것은 이 파일입니다.**
+6. `git add . && git commit -m "solve" && git push` — **push 가 곧 제출입니다.**
+7. 저장소의 **Actions** 탭에서 자동 채점 결과를 확인합니다.
+8. 마감 전까지 몇 번이든 다시 제출할 수 있으며, 마지막 제출이 평가됩니다.
+
+`.gitignore` 가 `*.pt` 를 무시하지만 바로 아래 `!model.pt` 예외가 있어 `model.pt` 는 그대로 커밋됩니다. `git add` 후 `git status` 에 `samples.npz` 와 `model.pt` 가 올라왔는지 꼭 확인하세요. 두 파일이 없으면 채점기가 평가할 대상이 없습니다.
 
 ## 평가 기준
 
