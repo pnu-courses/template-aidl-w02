@@ -219,5 +219,3 @@ __marimo__/
 
 # 주차별 추가
 data/
-*.pt
-!model.pt

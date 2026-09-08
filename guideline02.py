@@ -19,7 +19,7 @@ from model import MnistNet
 
 DATA_ROOT = "data"
 SEED = 0
-EPOCHS = 100
+EPOCHS = 30
 BATCH = 128
 LR = 1e-3
 
