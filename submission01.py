@@ -13,6 +13,7 @@ def numpy_matmul(A, B):
 def main():
     tensor1 = torch.randn(1024,1024)
     tensor2 = torch.randn(1024,1024)
+    
     torch_result = torch.matmul(tensor1, tensor2)
     print("torch matmul result:", torch_result)
 
