@@ -56,8 +56,12 @@ def predict(model, images, indices):
     images 는 (N, 1, 28, 28) 텐서입니다.
     예측은 출력이 가장 큰 인덱스이며, torch.no_grad() 안에서 계산하세요.
     """
-    # TODO: 각 인덱스마다 예측한 숫자를 모아 반환하세요.
-    return ...    
+    with torch.no_grad():
+        outputs = model(images)
+        _, predicted = torch.max(outputs, 1)
+        return [predicted[i].item() for i in indices]
+    
+
 
 
 def main():
