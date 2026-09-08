@@ -29,7 +29,11 @@ def load_samples(path="samples.npz"):
       3) 채널 차원을 넣어 (N, 1, 28, 28) 로 만든다
     """
     # TODO: np.load(path)["images"] 를 위 설명대로 변환해 반환하세요.
-    raise NotImplementedError
+    with np.load(path) as data:
+        images = data["images"].astype(np.float32) / 255.0
+    
+    return torch.from_numpy(images).unsqueeze(1)
+    
 
 
 def load_model(path="model.pt"):
@@ -43,7 +47,10 @@ def load_model(path="model.pt"):
     eval() 을 빠뜨리면 Dropout·BatchNorm 이 학습 모드로 남아 결과가 달라집니다.
     """
     # TODO: 위 세 단계를 구현하세요.
-    raise NotImplementedError
+    model = MnistNet()
+    model.load_state_dict(torch.load(path))
+    model.eval()
+    return model
 
 
 def predict(model, images, indices):
@@ -53,7 +60,11 @@ def predict(model, images, indices):
     예측은 출력이 가장 큰 인덱스이며, torch.no_grad() 안에서 계산하세요.
     """
     # TODO: 각 인덱스마다 예측한 숫자를 모아 반환하세요.
-    raise NotImplementedError
+    with torch.no_grad():
+        outputs = model(images)
+        _, predicted = torch.max(outputs, 1)
+        return [predicted[i].item() for i in indices]
+    
 
 
 def main():
