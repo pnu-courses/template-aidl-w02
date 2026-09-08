@@ -50,7 +50,7 @@ echo "0 1 2" | uv run submission02.py   # 7 2 1 이 나오는지 확인 (채점 
 
 `guideline02.py` 는 개인 PC용이며 채점하지 않습니다. 채점기가 실행하는 파일은 `submission02.py` 하나입니다.
 
-## 과제 3 — ResNet-101 · CIFAR-10 (작성 중)
+## 과제 3 — ResNet-101 · CIFAR-10
 
 `guideline03.py` 로 ResNet-101 을 CIFAR-10 으로 학습하고, `submission03.py` 로 추론합니다.
 
