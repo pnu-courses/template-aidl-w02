@@ -3,11 +3,11 @@ import torch
 
 def torch_matmul(A, B):
     """PyTorch matmul 구현"""
-    return ...
+    return torch.matmul(A,B)
 
 def numpy_matmul(A, B):
     """NumPy matmul 구현"""
-    return ...
+    return np.matmul(A,B)
 
 
 def main():
